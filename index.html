@@ -4,12 +4,7 @@
 <meta charset="UTF-8">
 <title>Malla Curricular – Ingeniería Eléctrica UNAL</title>
 
-<!-- ===================== -->
-<!--        ESTILOS        -->
-<!-- ===================== -->
 <style>
-
-/* ===== VARIABLES ===== */
 :root{
  --fund:#e6dcfa;
  --disc:#d8f3ee;
@@ -19,10 +14,8 @@
  --text:#1f2937;
 }
 
-/* ===== RESET ===== */
 *{ box-sizing:border-box; }
 
-/* ===== GENERAL ===== */
 body{
  margin:0;
  font-family:'Segoe UI',system-ui,sans-serif;
@@ -35,7 +28,6 @@ h1{
  margin:20px 0;
 }
 
-/* ===== PANEL SUPERIOR ===== */
 .dashboard{
  max-width:1300px;
  margin:auto;
@@ -55,18 +47,18 @@ h1{
  box-shadow:0 6px 18px rgba(0,0,0,.08);
 }
 
-/* ===== CONTADOR ===== */
 .big-counter{
  font-size:34px;
  font-weight:700;
 }
+
 .big-counter span{
  font-size:14px;
  color:#6b7280;
 }
 
-/* ===== BARRAS ===== */
 .progress-group{ margin-top:12px; }
+
 .bar{
  height:10px;
  background:#e5e7eb;
@@ -74,24 +66,24 @@ h1{
  overflow:hidden;
  margin-top:6px;
 }
+
 .bar span{
  display:block;
  height:100%;
 }
 
-/* ===== LEYENDA ===== */
 .legend{
  display:flex;
  gap:10px;
  flex-wrap:wrap;
 }
+
 .legend div{
  padding:6px 14px;
  border-radius:20px;
  font-size:12px;
 }
 
-/* ===== BOTÓN ===== */
 button{
  border:none;
  padding:10px 18px;
@@ -101,7 +93,6 @@ button{
  cursor:pointer;
 }
 
-/* ===== MALLA ===== */
 .grid{
  max-width:1300px;
  margin:20px auto;
@@ -111,13 +102,11 @@ button{
  gap:14px;
 }
 
-/* ===== SEMESTRES ===== */
 .semester{
  background:var(--card);
  border-radius:20px;
  padding:10px;
  box-shadow:0 6px 18px rgba(0,0,0,.05);
- min-width:0;
 }
 
 .semester h3{
@@ -126,7 +115,6 @@ button{
  margin-bottom:10px;
 }
 
-/* ===== MATERIAS ===== */
 .course{
  height:78px;
  border-radius:16px;
@@ -144,10 +132,9 @@ button{
 
 .course:hover{ transform:translateY(-2px); }
 
-/* ===== ESTADOS ===== */
 .course.approved{
  text-decoration:line-through;
- opacity:.8;
+ opacity:.7;
 }
 
 .course.locked{
@@ -162,14 +149,12 @@ button{
  display:flex;
  align-items:center;
  justify-content:center;
- text-align:center;
  border-radius:16px;
  font-size:11px;
  font-weight:600;
  padding:6px;
 }
 
-/* ===== COLORES ===== */
 .fund{ background:var(--fund); }
 .disc{ background:var(--disc); }
 .libre{ background:var(--libre); }
@@ -187,12 +172,8 @@ button{
 
 <h1>Malla Curricular – Ingeniería Eléctrica (UNAL)</h1>
 
-<!-- ===================== -->
-<!--     PANEL SUPERIOR    -->
-<!-- ===================== -->
 <div class="dashboard">
  <div class="summary">
-
   <div class="box" id="stats"></div>
 
   <div class="box">
@@ -204,100 +185,83 @@ button{
    <br>
    <button onclick="resetAll()">Restablecer progreso</button>
   </div>
-
  </div>
 </div>
 
-<!-- ===================== -->
-<!--        MALLA          -->
-<!-- ===================== -->
 <div class="grid" id="grid"></div>
 
 <div class="footer">Clic para aprobar · Guardado automático</div>
 
 <script>
-
-/* ===================== */
-/*   DATOS DE LA MALLA   */
-/* ===================== */
 const data=[
- {sem:1,id:'1000004',n:'Cálculo Diferencial',c:4,t:'fund'},
- {sem:1,id:'1000008',n:'Geometría Vectorial y Analítica',c:4,t:'fund'},
- {sem:1,id:'3009531',n:'Introducción a la Ing. Eléctrica',c:2,t:'disc'},
+ {sem:1,id:'CALC_DIF',n:'Cálculo Diferencial',c:4,t:'fund'},
+ {sem:1,id:'GEO_VEC',n:'Geometría Vectorial',c:4,t:'fund'},
+ {sem:1,id:'INTRO_IE',n:'Introducción a la Ing. Eléctrica',c:2,t:'disc'},
  {sem:1,id:'LE1',n:'Libre Elección',c:3,t:'libre'},
  {sem:1,id:'LE2',n:'Libre Elección',c:3,t:'libre'},
- 
- {sem:2,id:'1000005',n:'Cálculo Integral',c:4,t:'fund',req:['1000004']},
- {sem:2,id:'1000003',n:'Álgebra Lineal',c:4,t:'fund',req:['1000008']},
- {sem:2,id:'1000019',n:'Física Mecánica',c:4,t:'fund',req:['1000004','1000008']},
- {sem:2,id:'3010481',n:'Análisis de Circuitos Eléctricos I',c:3,t:'disc',req:['1000004']},
+
+ {sem:2,id:'CALC_INT',n:'Cálculo Integral',c:4,t:'fund',req:['CALC_DIF']},
+ {sem:2,id:'ALG_LIN',n:'Álgebra Lineal',c:4,t:'fund',req:['GEO_VEC']},
+ {sem:2,id:'FIS_MEC',n:'Física Mecánica',c:4,t:'fund',req:['CALC_DIF']},
+ {sem:2,id:'CIRC_I',n:'Análisis de Circuitos I',c:3,t:'disc',req:['CALC_DIF']},
  {sem:2,id:'LE3',n:'Libre Elección',c:3,t:'libre'},
 
- {sem:3,id:'1000006',n:'Cálculo en varias variables',c:4,t:'fund',req:['1000005']},
- {sem:3,id:'1000007',n:'Ecuaciones Diferenciales',c:4,t:'fund',req:['1000005','1000003']},
- {sem:3,id:'1000017',n:'Fisica de Electricidad y Magnetismo',c:4,t:'fund',req:['1000019','1000005']},
- {sem:3,id:'3010435',n:'Fundamentos de Programación',c:3,t:'fund'},
+ {sem:3,id:'CALC_VAR',n:'Cálculo Multivariable',c:4,t:'fund',req:['CALC_INT']},
+ {sem:3,id:'EDO',n:'Ecuaciones Diferenciales',c:4,t:'fund',req:['CALC_INT','ALG_LIN']},
+ {sem:3,id:'EM',n:'Electricidad y Magnetismo',c:4,t:'fund',req:['FIS_MEC','CALC_INT']},
+ {sem:3,id:'PROG',n:'Fundamentos de Programación',c:3,t:'fund'},
  {sem:3,id:'LE4',n:'Libre Elección',c:3,t:'libre'},
 
- {sem:4,id:'3010651',n:'Estadística I',c:3,t:'fund',req:['1000005']},
- {sem:4,id:'3006905',n:'Matemáticas Especiales',c:4,t:'fund',req:['1000007']},
- {sem:4,id:'3006907',n:'Métodos Numéricos',c:4,t:'fund',req:['1000005','1000003','1000006','3006905']},
- {sem:4,id:'3010496',n:'Análisis de Circuitos Electricos II',c:3,t:'disc',req:['3010481','1000007']},
- {sem:4,id:'3010435',n:'Laboratorios de Circuitos',c:1,t:'disc'},
+ {sem:4,id:'EST',n:'Estadística I',c:3,t:'fund',req:['CALC_INT']},
+ {sem:4,id:'MAT_ESP',n:'Matemáticas Especiales',c:4,t:'fund',req:['EDO']},
+ {sem:4,id:'MET_NUM',n:'Métodos Numéricos',c:4,t:'fund',req:['CALC_VAR']},
+ {sem:4,id:'CIRC_II',n:'Circuitos Eléctricos II',c:3,t:'disc',req:['CIRC_I','EDO']},
+ {sem:4,id:'LAB_CIRC',n:'Laboratorio de Circuitos',c:1,t:'disc'},
 
- {sem:5,id:'',n:'Optativa de Fundamentacion',c:3,t:'fund'},
- {sem:5,id:'3010421',n:'Señales y Sistemas lineales',c:3,t:'disc'},
- {sem:5,id:'3010520',n:'Teoría Electromagnética',c:3,t:'disc',req:['1000017']},
- {sem:5,id:'3010458',n:'Electrónica Análoga I',c:3,t:'disc',req:['3010496','3007756']},
+ {sem:5,id:'OPT_FUND',n:'Optativa de Fundamentación',c:3,t:'fund'},
+ {sem:5,id:'SEN_SIS',n:'Señales y Sistemas',c:3,t:'disc'},
+ {sem:5,id:'TEO_EM',n:'Teoría Electromagnética',c:3,t:'disc',req:['EM']},
+ {sem:5,id:'ELEC_I',n:'Electrónica Análoga I',c:3,t:'disc',req:['CIRC_II']},
  {sem:5,id:'LE5',n:'Libre Elección',c:3,t:'libre'},
  {sem:5,id:'LE6',n:'Libre Elección',c:3,t:'libre'},
- 
- {sem:6,id:'3010490',n:'Modelo de Líneas de Transmisión',c:3,t:'disc',req:['3010520']},
- {sem:6,id:'3010402',n:'Control:Entrada - Salida',c:3,t:'disc',req:['3010421']},
- {sem:6,id:'3010661',n:'Máquinas Eléctricas I',c:3,t:'disc',req:['3010520']},
- {sem:6,id:'3010457',n:'Electrónica Análoga II',c:3,t:'disc',req:['3010458']},
- {sem:6,id:'3010483',n:'Electrónica Digital',c:3,t:'disc',req:['3010458']},
 
- {sem:7,id:'',n:'Optativa disciplinar',c:3,t:'disc'},
- {sem:7,id:'3010529',n:'Instalaciones Eléctricas Indus. Y Residenciales',c:3,t:'disc',req:['3010661','3010490']},
- {sem:7,id:'3010662',n:'Máquinas Eléctricas II',c:3,t:'disc',req:['3010661']},
- {sem:7,id:'3010494',n:'Telecomunicaciones',c:3,t:'disc',req:['3010421','3010483']},
- {sem:7,id:'',n:'Optativa disciplinar',c:3,t:'disc'},
+ {sem:6,id:'LINEAS',n:'Líneas de Transmisión',c:3,t:'disc',req:['TEO_EM']},
+ {sem:6,id:'CONTROL',n:'Control Entrada-Salida',c:3,t:'disc',req:['SEN_SIS']},
+ {sem:6,id:'MAQ_I',n:'Máquinas Eléctricas I',c:3,t:'disc',req:['TEO_EM']},
+ {sem:6,id:'ELEC_II',n:'Electrónica Análoga II',c:3,t:'disc',req:['ELEC_I']},
+ {sem:6,id:'DIGITAL',n:'Electrónica Digital',c:3,t:'disc',req:['ELEC_I']},
 
- {sem:8,id:'3010538',n:'Laboratorio de Máquinas Eléctricas',c:2,t:'disc'},
- {sem:8,id:'3010529',n:'Sistemas de Generación de Energía Eléctrica',c:3,t:'disc',req:['3010662','3010478']},
- {sem:8,id:'3010497',n:'Análisis de Sistemas de Potencia',c:3,t:'disc',req:['3010662','3010490']},
- {sem:8,id:'3010398',n:'Automatización de Sistemas Eléctricos',c:3,t:'disc',req:['3010483','3010538']},
+ {sem:7,id:'OPT_DISC_1',n:'Optativa Disciplinar',c:3,t:'disc'},
+ {sem:7,id:'INST',n:'Instalaciones Eléctricas',c:3,t:'disc',req:['MAQ_I','LINEAS']},
+ {sem:7,id:'MAQ_II',n:'Máquinas Eléctricas II',c:3,t:'disc',req:['MAQ_I']},
+ {sem:7,id:'TELECOM',n:'Telecomunicaciones',c:3,t:'disc',req:['DIGITAL']},
+ {sem:7,id:'OPT_DISC_2',n:'Optativa Disciplinar',c:3,t:'disc'},
+
+ {sem:8,id:'LAB_MAQ',n:'Laboratorio de Máquinas',c:2,t:'disc'},
+ {sem:8,id:'GEN',n:'Generación de Energía',c:3,t:'disc',req:['MAQ_II']},
+ {sem:8,id:'POT',n:'Sistemas de Potencia',c:3,t:'disc',req:['MAQ_II','LINEAS']},
+ {sem:8,id:'AUTO',n:'Automatización Eléctrica',c:3,t:'disc',req:['DIGITAL']},
  {sem:8,id:'LE7',n:'Libre Elección',c:3,t:'libre'},
 
- {sem:9,id:'',n:'Optativa disciplinar',c:3,t:'disc'},
- {sem:9,id:'3010482',n:'Diseño de Redes de Transmisión y Distribución',c:3,t:'disc',req:['3010497']},
- {sem:9,id:'3010492',n:'Sistemas de Protecciones Eléctricas',c:3,t:'disc',req:['3010497']},
+ {sem:9,id:'OPT_DISC_3',n:'Optativa Disciplinar',c:3,t:'disc'},
+ {sem:9,id:'REDES',n:'Redes Eléctricas',c:3,t:'disc',req:['POT']},
+ {sem:9,id:'PROT',n:'Protecciones Eléctricas',c:3,t:'disc',req:['POT']},
  {sem:9,id:'LE8',n:'Libre Elección',c:3,t:'libre'},
 
- {sem:10,id:'3007424',n:'Trabajo de Grado',c:6,t:'disc'}
+ {sem:10,id:'TG',n:'Trabajo de Grado',c:6,t:'disc'},
  {sem:10,id:'LE9',n:'Libre Elección',c:3,t:'libre'},
  {sem:10,id:'LE10',n:'Libre Elección',c:3,t:'libre'},
- {sem:10,id:'LE11',n:'Libre Elección',c:4,t:'libre'},
+ {sem:10,id:'LE11',n:'Libre Elección',c:4,t:'libre'}
 ];
 
-/* ===================== */
-/*   ESTADO LOCAL        */
-/* ===================== */
-let done = JSON.parse(localStorage.getItem('ie_done') || '[]');
+let done = JSON.parse(localStorage.getItem('ie_done')||'[]');
 
-/* ===================== */
-/*   CÁLCULOS            */
-/* ===================== */
-function calc(type){
- const total = data.filter(x=>x.t===type).reduce((s,x)=>s+x.c,0);
- const d = data.filter(x=>x.t===type && done.includes(x.id)).reduce((s,x)=>s+x.c,0);
+function calc(t){
+ const total=data.filter(x=>x.t===t).reduce((s,x)=>s+x.c,0);
+ const d=data.filter(x=>x.t===t&&done.includes(x.id)).reduce((s,x)=>s+x.c,0);
  return {d,total,p:Math.round(d/total*100)||0};
 }
 
-/* ===================== */
-/*   RENDER              */
-/* ===================== */
 function render(){
  const grid=document.getElementById('grid');
  const stats=document.getElementById('stats');
@@ -308,20 +272,16 @@ function render(){
  const totalAll=data.reduce((s,x)=>s+x.c,0);
 
  stats.innerHTML=`
-  <div class="big-counter">${totalDone} <span>/ ${totalAll} créditos</span></div>
-
-  <div class="progress-group">Fundamentación ${f.p}%
-   <div class="bar"><span style="width:${f.p}%;background:#9b87d4"></span></div>
-  </div>
-
-  <div class="progress-group">Disciplinar ${d.p}%
-   <div class="bar"><span style="width:${d.p}%;background:#55c9b2"></span></div>
-  </div>
-
-  <div class="progress-group">Libre Elección ${l.p}%
-   <div class="bar"><span style="width:${l.p}%;background:#f2c14e"></span></div>
-  </div>
- `;
+ <div class="big-counter">${totalDone} <span>/ ${totalAll} créditos</span></div>
+ <div class="progress-group">Fundamentación ${f.p}%
+  <div class="bar"><span style="width:${f.p}%;background:#9b87d4"></span></div>
+ </div>
+ <div class="progress-group">Disciplinar ${d.p}%
+  <div class="bar"><span style="width:${d.p}%;background:#55c9b2"></span></div>
+ </div>
+ <div class="progress-group">Libre Elección ${l.p}%
+  <div class="bar"><span style="width:${l.p}%;background:#f2c14e"></span></div>
+ </div>`;
 
  for(let s=1;s<=10;s++){
   const col=document.createElement('div');
@@ -329,26 +289,17 @@ function render(){
   col.innerHTML=`<h3>Semestre ${s}</h3>`;
 
   data.filter(x=>x.sem===s).forEach(c=>{
-   let locked=false, tip='';
-   if(c.req && !c.req.every(r=>done.includes(r))){
-    locked=true;
-    tip='Faltan prerrequisitos';
-   }
-
+   const locked=c.req && !c.req.every(r=>done.includes(r));
    const div=document.createElement('div');
    div.className=`course ${c.t} ${done.includes(c.id)?'approved':''} ${locked?'locked':''}`;
-   div.dataset.tip=tip;
+   div.dataset.tip=locked?'Faltan prerrequisitos':'';
    div.innerHTML=`<b>${c.n}</b><small>${c.c} créditos</small>`;
-
    div.onclick=()=>{
     if(locked) return;
-    done.includes(c.id)
-     ? done=done.filter(x=>x!==c.id)
-     : done.push(c.id);
+    done.includes(c.id)?done=done.filter(x=>x!==c.id):done.push(c.id);
     localStorage.setItem('ie_done',JSON.stringify(done));
     render();
    };
-
    col.appendChild(div);
   });
 
@@ -367,3 +318,4 @@ render();
 
 </body>
 </html>
+
